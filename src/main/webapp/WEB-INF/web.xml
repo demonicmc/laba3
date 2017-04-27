@@ -36,6 +36,6 @@
   </filter>
   <filter-mapping>
     <filter-name>WhiteFilter</filter-name>
-    <url-pattern>/listUser</url-pattern>
+    <url-pattern>/*</url-pattern>
   </filter-mapping>
 </web-app>

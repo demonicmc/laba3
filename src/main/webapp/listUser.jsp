@@ -12,6 +12,7 @@
     <title>Title</title>
 </head>
 <body>
+    <c:import url="/WEB-INF/jsp/navigate/navigate.jsp"/>
     <table border="1">
         <c:forEach items="${requestScope.users}" var="user">
             <tr>

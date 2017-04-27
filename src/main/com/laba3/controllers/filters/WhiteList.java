@@ -10,24 +10,39 @@ import java.io.IOException;
  */
 public class WhiteList implements Filter {
 
+    private String encoding = "utf-8";
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
 
     }
 
-    @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
-            throws IOException, ServletException {
 
-        String userLogin = (String) ((HttpServletRequest) servletRequest)
-                .getSession().getAttribute("userLogin");
-        if (userLogin != null) {
-            filterChain.doFilter(servletRequest, servletResponse);
-        } else {
-            ((HttpServletResponse) servletResponse)
-                    .sendRedirect(((HttpServletRequest) servletRequest).getContextPath() + "/");
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException, ServletException {
+        request.setCharacterEncoding(encoding);
+
+        HttpServletRequest req = (HttpServletRequest) request;
+        HttpServletResponse resp = (HttpServletResponse) response;
+        String url = req.getRequestURI();
+
+//        req.getSession().getAttribute("userLogin");
+
+//        if(req.getSession().getAttribute("userLogin") != null && !url.endsWith("login") && !url.endsWith("register") && !url.endsWith("autority")) {
+//            System.out.println(req.getSession().getAttribute("userLogin"));
+//            resp.sendRedirect("/login");
+//            return;
+//        }
+        if(req.getSession().getAttribute("userLogin") == null && !url.endsWith("login") && !url.endsWith("LogginServlet")){
+//            System.out.println("Login is null");
+            resp.sendRedirect("/login");
+            return;
         }
+
+//        if(req.getSession().getAttribute("userLogin") != null && !url.endsWith("login")){
+//            System.out.println("Login is not null");
+//        }
+
+        filterChain.doFilter(request, response);
 
     }
 

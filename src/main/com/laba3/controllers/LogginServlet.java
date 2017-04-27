@@ -9,6 +9,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 /**
@@ -35,21 +36,29 @@ public class LogginServlet extends HttpServlet{
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String login = req.getParameter("login");
         String password = req.getParameter("password");
+        HttpSession httpSession = req.getSession();
+        String action = req.getParameter("action");
 
-        if (userService.authentication(login, password) != null && !userService.authentication(login, password).getLogin().equals("admin")) {
-            req.getSession().setAttribute("userLogin", login);
-            logger.debug("user: " + login + " logged" );
-            resp.sendRedirect(req.getContextPath() + "/listUser");
+        if(action != null && !action.isEmpty()){
+            if(action.equals("exit")){
+                httpSession.invalidate();
+                req.getRequestDispatcher("/home.jsp").forward(req,resp);
+            }
+        } else {
+            if (userService.authentication(login, password) != null && !userService.authentication(login, password).getLogin().equals("admin")) {
+                req.getSession().setAttribute("userLogin", login);
+                logger.debug("user: " + login + " logged");
+                resp.sendRedirect(req.getContextPath() + "/listUser");
 
-        } else if (userService.authentication(login, password) != null &&
-                userService.authentication(login, password).getLogin().equals("admin")) {
+            } else if (userService.authentication(login, password) != null &&
+                    userService.authentication(login, password).getLogin().equals("admin")) {
 
-            req.getSession().setAttribute("userLogin", login);
-            logger.debug("user: " + login + " logged" );
-            resp.sendRedirect(req.getContextPath() + "/admin");
+                req.getSession().setAttribute("userLogin", login);
+                logger.debug("user: " + login + " logged");
+                resp.sendRedirect(req.getContextPath() + "/admin");
+            } else
+                req.getRequestDispatcher("error.jsp").forward(req, resp);
         }
-            else
-            req.getRequestDispatcher("error.jsp").forward(req,resp);
     }
 
 }

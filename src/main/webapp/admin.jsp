@@ -14,16 +14,20 @@
     <title>admin</title>
 </head>
 <body>
+
+<c:import url="/WEB-INF/jsp/navigate/navigate.jsp"/>
+
 <table border="1">
-    <%--<tr>--%>
-        <%--<th>id</th>--%>
-        <%--<th>login</th>--%>
-        <%--<th>password</th>--%>
-        <%--<th>mail</th>--%>
-        <%--<th>role_id</th>--%>
-        <%--<th></th>--%>
-        <%--<th></th>--%>
-    <%--</tr>--%>
+    <tr>
+        <th>id</th>
+        <th>login</th>
+        <th>password</th>
+        <th>mail</th>
+        <th>role_id</th>
+        <th></th>
+        <th></th>
+    </tr>
+
     <c:forEach items="${requestScope.users}" var="admin">
         <tr>
             <td><c:out value="${admin.id}"></c:out></td>
