@@ -1,4 +1,4 @@
-package main.com.laba3.dao;
+package com.laba3.dao;
 
 import java.util.Collection;
 

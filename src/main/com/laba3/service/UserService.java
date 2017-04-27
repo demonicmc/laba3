@@ -1,6 +1,6 @@
-package main.com.laba3.service;
+package com.laba3.service;
 
-import main.com.laba3.pojo.User;
+import com.laba3.pojo.User;
 
 import java.util.List;
 
@@ -9,7 +9,8 @@ import java.util.List;
  */
 public interface UserService {
 
-    User authentication (String loggin, String password);
+    User authentication (String login, String password);
     List<User> getAllUser() throws ClassNotFoundException;
+    long addUser (User user);
 
 }

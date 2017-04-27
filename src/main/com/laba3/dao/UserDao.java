@@ -1,12 +1,15 @@
-package main.com.laba3.dao;
+package com.laba3.dao;
 
-import main.com.laba3.pojo.User;
+import com.laba3.pojo.User;
+
+import java.util.List;
 
 /**
  * Created by set on 23.04.17.
  */
 public interface UserDao extends Dao<Long, User> {
 
-    User findUserByLoginAndPassword(String loggin, String password);
+    User findUserByLoginAndPassword(String login, String password);
+    List<User> getAll();
 
 }

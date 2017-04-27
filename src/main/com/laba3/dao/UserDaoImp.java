@@ -1,42 +1,41 @@
-package main.com.laba3.dao;
+package com.laba3.dao;
 
-import main.com.laba3.ConnectBase;
-import main.com.laba3.pojo.User;
+import com.laba3.ConnectBase;
+import com.laba3.pojo.User;
 import org.apache.log4j.Logger;
 
 import java.sql.*;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by set on 23.04.17.
  */
 public class UserDaoImp implements UserDao {
 
-    private static final Logger logger = Logger.getLogger(UserDaoImp.class);
+    final static Logger logger = Logger.getLogger(UserDaoImp.class);
 
 
-    private static final String SELECT_ALL = "SELECT id, loggin, password, mail, role_id FROM user";
+    private static final String SELECT_ALL = "SELECT * FROM public.user";
     private static final String INSERT_INTO =
-            "INSERT INTO user (loggin, password, mail, role_id) VALUES (?, ?, ?, ?)";
+            "INSERT INTO public.user (login, password, mail, role_id) VALUES (?, ?, ?, ?)";
 
     private static final String UPDATE_WHERE =
-            "UPDATE user SET loggin = ?, password = ?, mail = ?, role_id = ?   WHERE id = ?";
+            "UPDATE public.user SET login = ?, password = ?, mail = ?, role_id = ?   WHERE id = ?";
 
-    private static final String DELETE_BY_ID = "DELETE FROM user WHERE id=?";
+    private static final String DELETE_BY_ID = "DELETE FROM public.user WHERE id=?";
 
 
     @Override
-    public User findUserByLoginAndPassword(String loggin, String password) {
+    public User findUserByLoginAndPassword(String login, String password) {
 
         User user = null;
 
-        try (Connection connection = ConnectBase.getConnection();
+        try (Connection connection = ConnectBase.initConnection();
              PreparedStatement statement = connection
-                     .prepareStatement( "SELECT * FROM user WHERE loggin = ? AND password = ?")) {
+                     .prepareStatement( "SELECT * FROM public.user WHERE login = ? AND password = ?")) {
 
-            statement.setString(1, loggin);
+            statement.setString(1, login);
             statement.setString(2, password);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
@@ -46,8 +45,6 @@ public class UserDaoImp implements UserDao {
             logger.debug("user " + user);
         } catch (SQLException e) {
             logger.error(e);
-        } catch (ClassNotFoundException e) {
-            logger.debug(e);
         }
 
         return user;
@@ -55,23 +52,41 @@ public class UserDaoImp implements UserDao {
     }
 
     @Override
-    public Collection<User> getAll() {
-        Set<User> users = new HashSet<>();
-        try  {
-            Connection connection = ConnectBase.getConnection();
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(SELECT_ALL);
-            while (resultSet.next()) {
-                users.add(createEntity(resultSet));
-            }
-            logger.debug(users);
-        } catch (SQLException e) {
-            logger.error(e);
-        } catch (ClassNotFoundException e) {
-            logger.debug(e);
-        }
+    public List<User> getAll() {
+        Connection connection = null;
+        Statement statement = null;
+        List<User> list = new ArrayList<>();
 
-        return users;
+        try {
+            connection =  ConnectBase.initConnection();
+             statement = connection.createStatement();
+            ResultSet result =
+                    statement.executeQuery("SELECT * FROM public.user");
+
+            while (result.next()) {
+                User user = new User();
+                user.setId(result.getLong(1));
+                user.setLogin(result.getString(2));
+                user.setPassword(result.getString(3));
+                user.setMail(result.getString(4));
+                user.setRole_id(result.getInt("Role_id"));
+
+                list.add(user);
+            }
+        } catch (SQLException e) {
+            logger.info(e.getMessage());
+            System.out.println("Что-то не так");
+//        } finally {
+//            if (connection != null) {
+//                try {
+//                    connection.close();
+//                } catch (SQLException ex) {
+//                    logger.info(ex);
+//                }
+//            }
+        }
+        return list;
+
     }
 
     @Override
@@ -79,7 +94,7 @@ public class UserDaoImp implements UserDao {
         User user = null;
 
         try {
-            Connection connection = ConnectBase.getConnection();
+            Connection connection = ConnectBase.initConnection();
             PreparedStatement statement = connection
                     .prepareStatement(SELECT_ALL + " WHERE id = ?");
             statement.setLong(1, id);
@@ -90,8 +105,6 @@ public class UserDaoImp implements UserDao {
             logger.debug(user);
         } catch (SQLException e) {
             logger.error(e);
-        } catch (ClassNotFoundException e) {
-            logger.debug(e);
         }
 
         return user;
@@ -100,10 +113,10 @@ public class UserDaoImp implements UserDao {
     @Override
     public Long insert(User entity) {
         long result = -1;
-        try (Connection connection = ConnectBase.getConnection();
+        try (Connection connection = ConnectBase.initConnection();
              PreparedStatement statement = connection.prepareStatement(INSERT_INTO,
                      Statement.RETURN_GENERATED_KEYS)) {
-            statement.setString(1, entity.getLoggin());
+            statement.setString(1, entity.getLogin());
             statement.setString(2, entity.getPassword());
             statement.setString(3, entity.getMail());
             statement.setLong(4, entity.getRole_id());
@@ -116,8 +129,6 @@ public class UserDaoImp implements UserDao {
 
         } catch (SQLException e) {
             logger.error(e);
-        } catch (ClassNotFoundException e) {
-            logger.debug(e);
         }
         return result;
     }
@@ -125,11 +136,11 @@ public class UserDaoImp implements UserDao {
     @Override
     public void update(User entity) {
 
-        try (Connection connection = ConnectBase.getConnection();
+        try (Connection connection = ConnectBase.initConnection();
              PreparedStatement statement = connection
                      .prepareStatement(UPDATE_WHERE)) {
 
-            statement.setString(1, entity.getLoggin());
+            statement.setString(1, entity.getLogin());
             statement.setString(2, entity.getPassword());
             statement.setString(3, entity.getMail());
             statement.setLong(4, entity.getRole_id());
@@ -138,8 +149,6 @@ public class UserDaoImp implements UserDao {
             statement.executeUpdate();
         } catch (SQLException e) {
             logger.error(e);
-        } catch (ClassNotFoundException e) {
-            logger.debug(e);
         }
 
     }
@@ -147,16 +156,14 @@ public class UserDaoImp implements UserDao {
     @Override
     public void delete(User entity) {
 
-        try (Connection connection = ConnectBase.getConnection();
+        try (Connection connection = ConnectBase.initConnection();
              PreparedStatement statement = connection
                      .prepareStatement(DELETE_BY_ID)) {
 
             statement.setLong(1, entity.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            logger.debug(e);
+            logger.info(e);
         }
 
     }
@@ -166,6 +173,6 @@ public class UserDaoImp implements UserDao {
                 resultSet.getString("login"),
                 resultSet.getString("password"),
                 resultSet.getString("mail"),
-                resultSet.getLong("role_id"));
+                resultSet.getInt("role_id"));
     }
 }

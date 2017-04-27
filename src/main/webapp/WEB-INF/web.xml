@@ -6,7 +6,7 @@
   <display-name>Archetype Created Web Application</display-name>
   <servlet>
     <servlet-name>LogginServlet</servlet-name>
-    <servlet-class>main.com.laba3.controllers.LogginServlet</servlet-class>
+    <servlet-class>com.laba3.controllers.LogginServlet</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>LogginServlet</servlet-name>
@@ -14,16 +14,25 @@
   </servlet-mapping>
   <servlet>
     <servlet-name>ListServlet</servlet-name>
-    <servlet-class>main.com.laba3.controllers.ListServlet</servlet-class>
+    <servlet-class>com.laba3.controllers.ListServlet</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>ListServlet</servlet-name>
     <url-pattern>/listUser</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <servlet-name>AdminServlet</servlet-name>
+    <servlet-class>com.laba3.controllers.AdminServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>AdminServlet</servlet-name>
+    <url-pattern>/admin</url-pattern>
+  </servlet-mapping>
+
 
   <filter>
     <filter-name>WhiteFilter</filter-name>
-    <filter-class>main.com.laba3.controllers.filters.WhiteList</filter-class>
+    <filter-class>com.laba3.controllers.filters.WhiteList</filter-class>
   </filter>
   <filter-mapping>
     <filter-name>WhiteFilter</filter-name>

@@ -1,7 +1,5 @@
-package main.com.laba3.pojo;
+package com.laba3.pojo;
 
-
-import java.util.logging.Logger;
 
 /**
  * Created by set on 23.04.17.
@@ -9,63 +7,48 @@ import java.util.logging.Logger;
 public class User {
 
     private long id;
-    private String loggin;
+    private String login;
     private String password;
     private String mail;
-    private long role_id;
+    private int role_id;
     private Role role;
 
 
     public User() {
     }
 
-    public User(long id, String loggin, String password, String mail, long role_id) {
+    public User(long id, String login, String password, String mail, int role_id) {
         this.id = id;
-        this.loggin = loggin;
+        this.login = login;
         this.password = password;
         this.mail = mail;
         this.role_id = role_id;
     }
 
-    public long getRole_id() {
+    public int getRole_id() {
         return role_id;
     }
 
-    public void setRole_id(long role_id) {
+    public void setRole_id(int role_id) {
         this.role_id = role_id;
     }
 
 
 
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (!(obj instanceof User)) {
-            return false;
-        }
-        if (this.id !=(((User) obj).id)) return false;
-        return true;
-    }
+
 
     @Override
     public String toString() {
         return "User{" +
                 "id=" + id +
-                ", loggin='" + loggin + '\'' +
+                ", loggin='" + login + '\'' +
                 ", password='" + password + '\'' +
                 ", mail='" + mail + '\'' +
-                ", role_id=" + role +
+                ", role_id=" + role_id +
                 '}';
     }
 
-    @Override
-    public int hashCode() {
-        int result = (int) getId();
-        result = 32 * result;
-        return result;
-    }
+
 
     public long getId() {
         return id;
@@ -75,12 +58,12 @@ public class User {
         this.id = id;
     }
 
-    public String getLoggin() {
-        return loggin;
+    public String getLogin() {
+        return login;
     }
 
-    public void setLoggin(String loggin) {
-        this.loggin = loggin;
+    public void setLogin(String login) {
+        this.login = login;
     }
 
     public String getPassword() {

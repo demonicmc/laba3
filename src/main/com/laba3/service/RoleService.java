@@ -1,6 +1,6 @@
-package main.com.laba3.service;
+package com.laba3.service;
 
-import main.com.laba3.pojo.Role;
+import com.laba3.pojo.Role;
 
 import java.util.Collection;
 

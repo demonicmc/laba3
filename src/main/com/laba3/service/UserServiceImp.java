@@ -1,8 +1,8 @@
-package main.com.laba3.service;
+package com.laba3.service;
 
-import main.com.laba3.dao.UserDao;
-import main.com.laba3.dao.UserDaoImp;
-import main.com.laba3.pojo.User;
+import com.laba3.dao.UserDao;
+import com.laba3.dao.UserDaoImp;
+import com.laba3.pojo.User;
 import org.apache.log4j.Logger;
 
 import java.util.List;
@@ -12,7 +12,7 @@ import java.util.List;
  */
 public class UserServiceImp implements UserService {
 
-    private static final Logger logger = Logger.getLogger(UserServiceImp.class);
+    final static Logger logger = Logger.getLogger(UserServiceImp.class);
 
     private static UserDao userDAO = new UserDaoImp();
 
@@ -27,7 +27,11 @@ public class UserServiceImp implements UserService {
 
     @Override
     public List<User> getAllUser() throws ClassNotFoundException {
-        return (List<User>) userDAO.getAll();
+        return  userDAO.getAll();
     }
 
+    @Override
+    public long addUser(User user) {
+        return userDAO.insert(user);
+    }
 }

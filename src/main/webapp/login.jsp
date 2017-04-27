@@ -8,10 +8,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@page errorPage="error.jsp" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ page import="main.com.laba3.dao.UserDao " %>
-<%@ page import="main.com.laba3.dao.UserDaoImp" %>
-<%@ page import="main.com.laba3.ConnectBase" %>
-<%@ page import="main.com.laba3.pojo.User" %>
+<%--<%@ page import="com.laba3.dao.UserDao " %>--%>
+<%--<%@ page import="com.laba3.dao.UserDaoImp" %>--%>
+<%--<%@ page import="com.laba3.ConnectBase" %>--%>
+<%--<%@ page import="com.laba3.pojo.User" %>--%>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -24,7 +24,7 @@
 <form action="LogginServlet" method="post" accept-charset="utf-8">
     <div class="main">
         <div class="textbox">
-            Введите логин:<input type="text" maxlength="20" name="loggin"
+            Введите логин:<input type="text" maxlength="20" name="login"
                                  required pattern="[A-Za-zА-Яа-яЁё]+$" title="Для заполнения используйте буквы" />
         </div>
         <div class="textbox">
@@ -32,7 +32,7 @@
                                   name="password" required pattern="[A-Za-zА-Яа-яЁё0-9]+$" />
         </div>
     </div>
-    <input type="submit" name="add" value="Вход"  class="button" />
+    <input type="submit" name="input" value="Вход"  class="button" />
     <a href=""><input type="submit" name="registration" value="Регистрация" class="button"></a>
 </form>
 </body>

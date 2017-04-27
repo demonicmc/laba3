@@ -1,7 +1,7 @@
-package main.com.laba3.dao;
+package com.laba3.dao;
 
-import main.com.laba3.ConnectBase;
-import main.com.laba3.pojo.Role;
+import com.laba3.ConnectBase;
+import com.laba3.pojo.Role;
 import org.apache.log4j.Logger;
 
 import java.sql.*;
@@ -14,19 +14,19 @@ import java.util.Set;
  */
 public class RoleDaoImp implements RoleDao {
 
-    private static final Logger logger = Logger.getLogger(RoleDaoImp.class);
+    final static Logger logger = Logger.getLogger(RoleDaoImp.class);
 
-    private static final String SELECT_ALL = "SELECT id, name FROM role";
-    private static final String INSERT_INTO = "INSERT INTO role (name) VALUES (?)";
-    private static final String UPDATE_WHERE = "UPDATE role SET name = ? WHERE id = ?";
-    private static final String DELETE_BY_ID = "DELETE FROM role WHERE id=?";
+    private static final String SELECT_ALL = "SELECT id, name FROM public.role";
+    private static final String INSERT_INTO = "INSERT INTO public.role (name) VALUES (?)";
+    private static final String UPDATE_WHERE = "UPDATE public.role SET name = ? WHERE id = ?";
+    private static final String DELETE_BY_ID = "DELETE FROM public.role WHERE id=?";
 
     @Override
     public Collection<Role> getAll() {
         Set<Role> roles = new HashSet<>();
 
         try  {
-            Connection connection = ConnectBase.getConnection();
+            Connection connection = ConnectBase.initConnection();
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(SELECT_ALL);
             while (resultSet.next()) {
@@ -35,8 +35,6 @@ public class RoleDaoImp implements RoleDao {
             logger.debug(roles);
         } catch (SQLException e) {
             logger.error(e);
-        } catch (ClassNotFoundException e) {
-            logger.debug(e);
         }
 
         return roles;
@@ -47,7 +45,7 @@ public class RoleDaoImp implements RoleDao {
        Role role= null;
 
         try {
-            Connection connection = ConnectBase.getConnection();
+            Connection connection = ConnectBase.initConnection();
             PreparedStatement statement = connection
                     .prepareStatement(SELECT_ALL + " WHERE id = ?");
             statement.setLong(1, id);
@@ -58,8 +56,6 @@ public class RoleDaoImp implements RoleDao {
             logger.debug(role);
         } catch (SQLException e) {
             logger.error(e);
-        } catch (ClassNotFoundException e) {
-            logger.debug(e);
         }
 
         return role;
@@ -68,7 +64,7 @@ public class RoleDaoImp implements RoleDao {
     @Override
     public Long insert(Role entity) {
         long result = -1;
-        try (Connection connection = ConnectBase.getConnection();
+        try (Connection connection = ConnectBase.initConnection();
              PreparedStatement statement = connection.prepareStatement(INSERT_INTO,
                      Statement.RETURN_GENERATED_KEYS)) {
                 statement.setString(1, entity.getName());
@@ -81,16 +77,14 @@ public class RoleDaoImp implements RoleDao {
 
             } catch (SQLException e) {
                 logger.error(e);
-            } catch (ClassNotFoundException e) {
-            logger.debug(e);
-        }
+            }
         return result;
     }
 
     @Override
     public void update(Role entity) {
         try  {
-            Connection connection = ConnectBase.getConnection();
+            Connection connection = ConnectBase.initConnection();
             PreparedStatement statement = connection
                     .prepareStatement(UPDATE_WHERE);
             statement.setString(1, entity.getName());
@@ -99,23 +93,19 @@ public class RoleDaoImp implements RoleDao {
             statement.executeUpdate();
         } catch (SQLException e) {
             logger.error(e);
-        } catch (ClassNotFoundException e) {
-            logger.debug(e);
         }
     }
 
     @Override
     public void delete(Role entity) {
         try  {
-            Connection connection = ConnectBase.getConnection();
+            Connection connection = ConnectBase.initConnection();
             PreparedStatement statement = connection
                     .prepareStatement(DELETE_BY_ID);
             statement.setLong(1, entity.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
            logger.error(e);
-        } catch (ClassNotFoundException e) {
-            logger.debug(e);
         }
     }
 

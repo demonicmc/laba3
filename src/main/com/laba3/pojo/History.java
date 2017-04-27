@@ -1,7 +1,6 @@
-package main.com.laba3.pojo;
+package com.laba3.pojo;
 
 import java.sql.Timestamp;
-import java.util.logging.Logger;
 
 /**
  * Created by set on 23.04.17.
@@ -54,22 +53,7 @@ public class History {
         this.messget = messget;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof History)) return false;
 
-        History history = (History) o;
-
-        return id == history.id;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = (int) getId();
-        result = 32 * result;
-        return result;
-    }
 
     @Override
     public String toString() {

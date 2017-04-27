@@ -12,11 +12,16 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * Created by root on 24.04.17.
+ * Created by root on 27.04.17.
  */
-public class ListServlet extends HttpServlet {
+public class AdminServlet extends HttpServlet {
 
     private static UserService userService = new UserServiceImp();
+
+//    @Override
+//    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+//        req.getRequestDispatcher("/login.jsp").forward(req, resp);
+//    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
@@ -35,7 +40,7 @@ public class ListServlet extends HttpServlet {
         else {
             req.setAttribute("users", users);
 
-            getServletContext().getRequestDispatcher("/listUser.jsp")
+            getServletContext().getRequestDispatcher("/admin.jsp")
                     .forward(req, resp);
         }
     }

@@ -1,6 +1,4 @@
-package main.com.laba3.pojo;
-
-import java.util.logging.Logger;
+package com.laba3.pojo;
 
 /**
  * Created by set on 23.04.17.
@@ -26,24 +24,7 @@ public class Role {
         this.name = name;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (!(obj instanceof Role)) {
-            return false;
-        }
-        if (this.id !=(((Role) obj).id)) return false;
-        return true;
-    }
 
-    @Override
-    public int hashCode() {
-        int result = (int) getId();
-        result = 32 * result;
-        return result;
-    }
 
     @Override
     public String toString() {

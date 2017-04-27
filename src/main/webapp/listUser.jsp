@@ -12,11 +12,11 @@
     <title>Title</title>
 </head>
 <body>
-    <table>
+    <table border="1">
         <c:forEach items="${requestScope.users}" var="user">
             <tr>
                 <td><c:out value="${user.id}"></c:out></td>
-                <td><c:out value="${user.loggin}"></c:out></td>
+                <td><c:out value="${user.login}"></c:out></td>
             </tr>
         </c:forEach>
     </table>
