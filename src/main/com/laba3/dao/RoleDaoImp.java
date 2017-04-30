@@ -16,28 +16,49 @@ public class RoleDaoImp implements RoleDao {
 
     final static Logger logger = Logger.getLogger(RoleDaoImp.class);
 
+    Connection connection = null;
+    PreparedStatement statement = null;
+    ResultSet resultSet = null;
+
     private static final String SELECT_ALL = "SELECT id, name FROM public.role";
     private static final String INSERT_INTO = "INSERT INTO public.role (name) VALUES (?)";
     private static final String UPDATE_WHERE = "UPDATE public.role SET name = ? WHERE id = ?";
     private static final String DELETE_BY_ID = "DELETE FROM public.role WHERE id=?";
+
+    private Connection getConnection() throws SQLException {
+        Connection conn;
+        conn = ConnectBase.getInstance().getConnection();
+        return conn;
+    }
 
     @Override
     public Collection<Role> getAll() {
         Set<Role> roles = new HashSet<>();
 
         try  {
-            Connection connection = ConnectBase.initConnection();
+           connection = getConnection();
             Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(SELECT_ALL);
+            resultSet = statement.executeQuery(SELECT_ALL);
             while (resultSet.next()) {
                 roles.add(createEntity(resultSet));
             }
             logger.debug(roles);
         } catch (SQLException e) {
             logger.error(e);
+        } finally {
+            try {
+                if (statement != null)
+                    statement.close();
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
-        return roles;
+            return roles;
     }
 
     @Override
@@ -45,17 +66,28 @@ public class RoleDaoImp implements RoleDao {
        Role role= null;
 
         try {
-            Connection connection = ConnectBase.initConnection();
-            PreparedStatement statement = connection
+            connection = getConnection();
+            statement = connection
                     .prepareStatement(SELECT_ALL + " WHERE id = ?");
             statement.setLong(1, id);
-            ResultSet resultSet = statement.executeQuery();
+            resultSet = statement.executeQuery();
             if (resultSet.next()) {
                 role = createEntity(resultSet);
             }
             logger.debug(role);
         } catch (SQLException e) {
             logger.error(e);
+        } finally {
+            try {
+                if (statement != null)
+                    statement.close();
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         return role;
@@ -64,28 +96,40 @@ public class RoleDaoImp implements RoleDao {
     @Override
     public Long insert(Role entity) {
         long result = -1;
-        try (Connection connection = ConnectBase.initConnection();
-             PreparedStatement statement = connection.prepareStatement(INSERT_INTO,
-                     Statement.RETURN_GENERATED_KEYS)) {
+        try  {
+            connection = getConnection();
+            statement = connection.prepareStatement(INSERT_INTO,
+                    Statement.RETURN_GENERATED_KEYS);
                 statement.setString(1, entity.getName());
                 statement.executeUpdate();
 
-                ResultSet resultSet = statement.getGeneratedKeys();
+                resultSet = statement.getGeneratedKeys();
                 if (resultSet.next()) {
                     result = resultSet.getLong(1);
                 }
 
             } catch (SQLException e) {
                 logger.error(e);
+            } finally {
+            try {
+                if (statement != null)
+                    statement.close();
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
+        }
         return result;
     }
 
     @Override
     public void update(Role entity) {
         try  {
-            Connection connection = ConnectBase.initConnection();
-            PreparedStatement statement = connection
+            connection = getConnection();
+            statement = connection
                     .prepareStatement(UPDATE_WHERE);
             statement.setString(1, entity.getName());
             statement.setLong(2, entity.getId());
@@ -93,19 +137,41 @@ public class RoleDaoImp implements RoleDao {
             statement.executeUpdate();
         } catch (SQLException e) {
             logger.error(e);
+        } finally {
+            try {
+                if (statement != null)
+                    statement.close();
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
     @Override
-    public void delete(Role entity) {
+    public void deleteById(int id) {
         try  {
-            Connection connection = ConnectBase.initConnection();
-            PreparedStatement statement = connection
+            connection = getConnection();
+            statement = connection
                     .prepareStatement(DELETE_BY_ID);
-            statement.setLong(1, entity.getId());
+            statement.setLong(1, id);
             statement.executeUpdate();
         } catch (SQLException e) {
            logger.error(e);
+        } finally {
+            try {
+                if (statement != null)
+                    statement.close();
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 

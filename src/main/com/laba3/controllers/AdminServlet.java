@@ -3,6 +3,7 @@ package com.laba3.controllers;
 import com.laba3.pojo.User;
 import com.laba3.service.UserService;
 import com.laba3.service.UserServiceImp;
+import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -17,6 +18,7 @@ import java.util.List;
 public class AdminServlet extends HttpServlet {
 
     private static UserService userService = new UserServiceImp();
+    final static Logger logger = Logger.getLogger(AdminServlet.class);
 
 //    @Override
 //    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

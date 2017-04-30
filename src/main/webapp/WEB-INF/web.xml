@@ -8,6 +8,14 @@
     <servlet-name>LogginServlet</servlet-name>
     <servlet-class>com.laba3.controllers.LogginServlet</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>registration</servlet-name>
+    <jsp-file>/jsp/registration.jsp</jsp-file>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>registration</servlet-name>
+    <url-pattern>/registration</url-pattern>
+  </servlet-mapping>
   <servlet-mapping>
     <servlet-name>LogginServlet</servlet-name>
     <url-pattern>/</url-pattern>
@@ -27,6 +35,23 @@
   <servlet-mapping>
     <servlet-name>AdminServlet</servlet-name>
     <url-pattern>/admin</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>RegistrServlet</servlet-name>
+    <servlet-class>com.laba3.controllers.RegistrServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>RegistrServlet</servlet-name>
+    <url-pattern>/register</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>ServletDelete</servlet-name>
+    <servlet-class>com.laba3.controllers.ServletDelete</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ServletDelete</servlet-name>
+    <url-pattern>/delete</url-pattern>
   </servlet-mapping>
 
 

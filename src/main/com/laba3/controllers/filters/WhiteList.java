@@ -32,7 +32,9 @@ public class WhiteList implements Filter {
 //            resp.sendRedirect("/login");
 //            return;
 //        }
-        if(req.getSession().getAttribute("userLogin") == null && !url.endsWith("login") && !url.endsWith("LogginServlet")){
+        if(req.getSession().getAttribute("userLogin") == null && !url.endsWith("login")
+                && !url.endsWith("LogginServlet") && !url.endsWith("registration") && !url.endsWith("register")){
+
 //            System.out.println("Login is null");
             resp.sendRedirect("/login");
             return;

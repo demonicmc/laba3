@@ -12,5 +12,6 @@ public interface UserService {
     User authentication (String login, String password);
     List<User> getAllUser() throws ClassNotFoundException;
     long addUser (User user);
+    void deleteByIdUser (int id);
 
 }

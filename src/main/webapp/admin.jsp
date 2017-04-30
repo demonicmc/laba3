@@ -15,35 +15,39 @@
 </head>
 <body>
 
-<c:import url="/WEB-INF/jsp/navigate/navigate.jsp"/>
+<c:import url="/jsp/navigate.jsp"/>
+<%--<%@include file="/jsp/navigate.jsp" %>--%>
 
-<table border="1">
-    <tr>
-        <th>id</th>
-        <th>login</th>
-        <th>password</th>
-        <th>mail</th>
-        <th>role_id</th>
-        <th></th>
-        <th></th>
-    </tr>
+    <form action="/add.jsp" method="post">
+        <input type="submit" name="add" value="Добавить нового пользователя" />
+    </form>
+<%--<form action="/register" method="post">--%>
+    <%--<input type="submit" name="delete" value="Удалить" />--%>
+<%--</form>--%>
 
-    <c:forEach items="${requestScope.users}" var="admin">
+    <table border="1">
         <tr>
-            <td><c:out value="${admin.id}"></c:out></td>
-            <td><c:out value="${admin.login}"></c:out></td>
-            <td><c:out value="${admin.password}"></c:out></td>
-            <td><c:out value="${admin.mail}"></c:out></td>
-            <td><c:out value="${admin.role_id}"></c:out></td>
-            <td><form action="/add" method="post">
-                <input type="submit" name="add" value="Добавить" />
-            </form></td>
-            <td><form action="" method="post">
-                <input type="submit" name="delete" value="Удалить" />
-            </form>
-            </td>
+            <th>id</th>
+            <th>login</th>
+            <th>password</th>
+            <th>mail</th>
+            <th>role_id</th>
         </tr>
-    </c:forEach>
-</table>
+
+        <c:forEach items="${requestScope.users}" var="admin">
+            <tr>
+                <td><c:out value="${admin.id}"></c:out></td>
+                <td><c:out value="${admin.login}"></c:out></td>
+                <td><c:out value="${admin.password}"></c:out></td>
+                <td><c:out value="${admin.mail}"></c:out></td>
+                <td><c:out value="${admin.role_id}"></c:out></td>
+                <td>
+                     <form method="post" action="/delete">
+                            <button type="submit" value="${admin.id}" name="delete">Удалить</button>
+                     </form>
+                </td>
+            </tr>
+        </c:forEach>
+    </table>
 </body>
 </html>

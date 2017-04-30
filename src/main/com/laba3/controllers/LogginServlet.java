@@ -19,7 +19,7 @@ public class LogginServlet extends HttpServlet{
 
     static {
         PropertyConfigurator.configure(LogginServlet.class.getClassLoader()
-                .getResource("/WEB-INF/log4j.properties"));
+                .getResource("log4j.properties"));
     }
 
     final static Logger logger = Logger.getLogger(LogginServlet.class);
@@ -45,7 +45,9 @@ public class LogginServlet extends HttpServlet{
                 req.getRequestDispatcher("/home.jsp").forward(req,resp);
             }
         } else {
-            if (userService.authentication(login, password) != null && !userService.authentication(login, password).getLogin().equals("admin")) {
+            if (userService.authentication(login, password) != null &&
+                    !userService.authentication(login, password).getLogin().equals("admin")) {
+
                 req.getSession().setAttribute("userLogin", login);
                 logger.debug("user: " + login + " logged");
                 resp.sendRedirect(req.getContextPath() + "/listUser");
@@ -56,6 +58,7 @@ public class LogginServlet extends HttpServlet{
                 req.getSession().setAttribute("userLogin", login);
                 logger.debug("user: " + login + " logged");
                 resp.sendRedirect(req.getContextPath() + "/admin");
+
             } else
                 req.getRequestDispatcher("error.jsp").forward(req, resp);
         }

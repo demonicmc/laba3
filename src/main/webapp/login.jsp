@@ -18,7 +18,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Вход</title>
-
+    <style>
+        <%@include file="css/input.css" %>
+    </style>
 </head>
 <body>
 <form action="LogginServlet" method="post" accept-charset="utf-8">
@@ -33,7 +35,9 @@
         </div>
     </div>
     <input type="submit" name="input" value="Вход"  class="button" />
-    <a href=""><input type="submit" name="registration" value="Регистрация" class="button"></a>
 </form>
+    <div class="main">
+        <a href="/registration"><input type="submit" name="registration" value="Регистрация" class="button"></a>
+    </div>
 </body>
 </html>

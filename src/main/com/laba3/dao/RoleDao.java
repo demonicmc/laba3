@@ -7,4 +7,6 @@ import com.laba3.pojo.Role;
  */
 public interface RoleDao extends Dao<Long, Role> {
 
+    void deleteById(int id);
+
 }

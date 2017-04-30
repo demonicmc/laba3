@@ -1,6 +1,7 @@
 package com.laba3.dao;
 
 import com.laba3.ConnectBase;
+import com.laba3.MyMath;
 import com.laba3.pojo.User;
 import org.apache.log4j.Logger;
 
@@ -14,9 +15,14 @@ import java.util.List;
 public class UserDaoImp implements UserDao {
 
     final static Logger logger = Logger.getLogger(UserDaoImp.class);
+    Connection connection = null;
+    PreparedStatement statement = null;
+    ResultSet resultSet = null;
 
 
     private static final String SELECT_ALL = "SELECT * FROM public.user";
+    private static final long ADMIN_ROLE_KEY = 2;
+    private static final long USER_ROLE_KEY = 1;
     private static final String INSERT_INTO =
             "INSERT INTO public.user (login, password, mail, role_id) VALUES (?, ?, ?, ?)";
 
@@ -26,17 +32,26 @@ public class UserDaoImp implements UserDao {
     private static final String DELETE_BY_ID = "DELETE FROM public.user WHERE id=?";
 
 
+    private Connection getConnection() throws SQLException {
+        Connection conn;
+        conn = ConnectBase.getInstance().getConnection();
+        return conn;
+    }
+
     @Override
     public User findUserByLoginAndPassword(String login, String password) {
 
         User user = null;
+        String pass = "";
+        pass = MyMath.createMD5(MyMath.createMD5(password));
 
-        try (Connection connection = ConnectBase.initConnection();
-             PreparedStatement statement = connection
-                     .prepareStatement( "SELECT * FROM public.user WHERE login = ? AND password = ?")) {
+        try {
+             connection = getConnection();
+              statement = connection
+                     .prepareStatement( "SELECT * FROM public.user WHERE login = ? AND password = ?");
 
             statement.setString(1, login);
-            statement.setString(2, password);
+            statement.setString(2, pass);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
                 user = createEntity(resultSet);
@@ -45,6 +60,18 @@ public class UserDaoImp implements UserDao {
             logger.debug("user " + user);
         } catch (SQLException e) {
             logger.error(e);
+        } finally {
+            try {
+                if (statement != null)
+                    statement.close();
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
         }
 
         return user;
@@ -53,37 +80,41 @@ public class UserDaoImp implements UserDao {
 
     @Override
     public List<User> getAll() {
-        Connection connection = null;
         Statement statement = null;
         List<User> list = new ArrayList<>();
 
         try {
-            connection =  ConnectBase.initConnection();
+            connection = getConnection();
              statement = connection.createStatement();
-            ResultSet result =
+             resultSet =
                     statement.executeQuery("SELECT * FROM public.user");
 
-            while (result.next()) {
+            while (resultSet.next()) {
                 User user = new User();
-                user.setId(result.getLong(1));
-                user.setLogin(result.getString(2));
-                user.setPassword(result.getString(3));
-                user.setMail(result.getString(4));
-                user.setRole_id(result.getInt("Role_id"));
+                user.setId(resultSet.getLong(1));
+                user.setLogin(resultSet.getString(2));
+                user.setPassword(resultSet.getString(3));
+                user.setMail(resultSet.getString(4));
+                user.setRole_id(resultSet.getInt("Role_id"));
 
                 list.add(user);
             }
         } catch (SQLException e) {
             logger.info(e.getMessage());
             System.out.println("Что-то не так");
-//        } finally {
-//            if (connection != null) {
-//                try {
-//                    connection.close();
-//                } catch (SQLException ex) {
-//                    logger.info(ex);
-//                }
-//            }
+//
+        } finally {
+            try {
+                if (statement != null)
+                    statement.close();
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
         }
         return list;
 
@@ -94,8 +125,8 @@ public class UserDaoImp implements UserDao {
         User user = null;
 
         try {
-            Connection connection = ConnectBase.initConnection();
-            PreparedStatement statement = connection
+            connection = getConnection();
+             statement = connection
                     .prepareStatement(SELECT_ALL + " WHERE id = ?");
             statement.setLong(1, id);
             ResultSet resultSet = statement.executeQuery();
@@ -105,6 +136,18 @@ public class UserDaoImp implements UserDao {
             logger.debug(user);
         } catch (SQLException e) {
             logger.error(e);
+        } finally {
+            try {
+                if (statement != null)
+                    statement.close();
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
         }
 
         return user;
@@ -113,13 +156,15 @@ public class UserDaoImp implements UserDao {
     @Override
     public Long insert(User entity) {
         long result = -1;
-        try (Connection connection = ConnectBase.initConnection();
-             PreparedStatement statement = connection.prepareStatement(INSERT_INTO,
-                     Statement.RETURN_GENERATED_KEYS)) {
+        try  {
+             connection = getConnection();
+             statement = connection.prepareStatement(INSERT_INTO,
+                    Statement.RETURN_GENERATED_KEYS);
             statement.setString(1, entity.getLogin());
             statement.setString(2, entity.getPassword());
             statement.setString(3, entity.getMail());
-            statement.setLong(4, entity.getRole_id());
+//            statement.setLong(4, entity.getRole_id());
+            statement.setLong(4, USER_ROLE_KEY);
             statement.executeUpdate();
 
             ResultSet resultSet = statement.getGeneratedKeys();
@@ -129,6 +174,18 @@ public class UserDaoImp implements UserDao {
 
         } catch (SQLException e) {
             logger.error(e);
+        } finally {
+            try {
+                if (statement != null)
+                    statement.close();
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
         }
         return result;
     }
@@ -136,10 +193,10 @@ public class UserDaoImp implements UserDao {
     @Override
     public void update(User entity) {
 
-        try (Connection connection = ConnectBase.initConnection();
-             PreparedStatement statement = connection
-                     .prepareStatement(UPDATE_WHERE)) {
-
+        try  {
+             connection = getConnection();
+             statement = connection
+                    .prepareStatement(UPDATE_WHERE);
             statement.setString(1, entity.getLogin());
             statement.setString(2, entity.getPassword());
             statement.setString(3, entity.getMail());
@@ -149,21 +206,46 @@ public class UserDaoImp implements UserDao {
             statement.executeUpdate();
         } catch (SQLException e) {
             logger.error(e);
+        } finally {
+            try {
+                if (statement != null)
+                    statement.close();
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
         }
 
     }
 
+
     @Override
-    public void delete(User entity) {
+    public void deleteById(int id) {
 
-        try (Connection connection = ConnectBase.initConnection();
-             PreparedStatement statement = connection
-                     .prepareStatement(DELETE_BY_ID)) {
-
-            statement.setLong(1, entity.getId());
+        try  {
+            connection = getConnection();
+             statement = connection
+                    .prepareStatement(DELETE_BY_ID);
+            statement.setLong(1, id);
             statement.executeUpdate();
         } catch (SQLException e) {
             logger.info(e);
+        } finally {
+            try {
+                if (statement != null)
+                    statement.close();
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
         }
 
     }

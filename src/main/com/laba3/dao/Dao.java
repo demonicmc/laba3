@@ -15,6 +15,5 @@ public interface Dao<PK, E> {
 
     void update(E entity);
 
-    void delete(E entity);
 
 }
