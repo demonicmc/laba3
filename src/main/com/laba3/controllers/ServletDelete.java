@@ -1,9 +1,12 @@
 package com.laba3.controllers;
 
 import com.laba3.service.UserService;
-import com.laba3.service.UserServiceImp;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -13,12 +16,22 @@ import java.io.IOException;
 /**
  * Created by root on 27.04.17.
  */
+@Controller
 public class ServletDelete extends HttpServlet{
 
-    private static UserService userService = new UserServiceImp();
+    @Autowired
+    private  UserService userService;
     final static Logger logger = Logger.getLogger(ServletDelete.class);
 
-//    public static UserService getUserService() {
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        SpringBeanAutowiringSupport.
+                processInjectionBasedOnServletContext(this,
+                        config.getServletContext());
+    }
+
+    //    public static UserService getUserService() {
 //        return userService;
 //    }
 
