@@ -2,9 +2,11 @@ package com.laba3.controllers;
 
 import com.laba3.pojo.User;
 import com.laba3.service.UserService;
-import com.laba3.service.UserServiceImp;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -17,10 +19,27 @@ import java.util.List;
  */
 public class AdminServlet extends HttpServlet {
 
-    private static UserService userService = new UserServiceImp();
+    private UserService userService;
     final static Logger logger = Logger.getLogger(AdminServlet.class);
 
-//    @Override
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        SpringBeanAutowiringSupport.
+                processInjectionBasedOnServletContext(this,
+                        config.getServletContext());
+    }
+
+    public UserService getUserService() {
+        return userService;
+    }
+
+    @Autowired
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
+
+    //    @Override
 //    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 //        req.getRequestDispatcher("/login.jsp").forward(req, resp);
 //    }

@@ -1,10 +1,11 @@
 package com.laba3.controllers;
 
 import com.laba3.service.UserService;
-import com.laba3.service.UserServiceImp;
 import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -17,14 +18,26 @@ import java.io.IOException;
  */
 public class LogginServlet extends HttpServlet{
 
-    static {
-        PropertyConfigurator.configure(LogginServlet.class.getClassLoader()
-                .getResource("log4j.properties"));
-    }
+//    static {
+//        PropertyConfigurator.configure(LogginServlet.class.getClassLoader()
+//                .getResource("log4j.properties"));
+//    }
 
     final static Logger logger = Logger.getLogger(LogginServlet.class);
+    //вместо этой строки делаешь
+    //private static UserService userService = new UserServiceImp();
+    //эоо бддет автосвязывание
+    //еще тебе надо фалйы конфиги сделать для спрннга
+    //сначала сделай протто ioc, а потом webmvc делай
+    @Autowired
+    private  UserService userService;
 
-    private static UserService userService = new UserServiceImp();
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        SpringBeanAutowiringSupport.
+                processInjectionBasedOnServletContext(this, config.getServletContext());
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

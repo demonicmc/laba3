@@ -4,6 +4,7 @@ import com.laba3.ConnectBase;
 import com.laba3.MyMath;
 import com.laba3.pojo.User;
 import org.apache.log4j.Logger;
+import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -12,6 +13,8 @@ import java.util.List;
 /**
  * Created by set on 23.04.17.
  */
+
+@Repository
 public class UserDaoImp implements UserDao {
 
     final static Logger logger = Logger.getLogger(UserDaoImp.class);

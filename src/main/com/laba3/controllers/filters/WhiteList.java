@@ -25,24 +25,12 @@ public class WhiteList implements Filter {
         HttpServletResponse resp = (HttpServletResponse) response;
         String url = req.getRequestURI();
 
-//        req.getSession().getAttribute("userLogin");
-
-//        if(req.getSession().getAttribute("userLogin") != null && !url.endsWith("login") && !url.endsWith("register") && !url.endsWith("autority")) {
-//            System.out.println(req.getSession().getAttribute("userLogin"));
-//            resp.sendRedirect("/login");
-//            return;
-//        }
         if(req.getSession().getAttribute("userLogin") == null && !url.endsWith("login")
                 && !url.endsWith("LogginServlet") && !url.endsWith("registration") && !url.endsWith("register")){
 
-//            System.out.println("Login is null");
             resp.sendRedirect("/login");
             return;
         }
-
-//        if(req.getSession().getAttribute("userLogin") != null && !url.endsWith("login")){
-//            System.out.println("Login is not null");
-//        }
 
         filterChain.doFilter(request, response);
 
